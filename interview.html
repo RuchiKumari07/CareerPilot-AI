@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - AI Interview Questions</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0a0a0f;
+    color:white;
+}
+
+.navbar{
+    height:70px;
+    background:#111118;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 35px;
+    box-shadow:0 0 15px rgba(0,0,0,.4);
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#7c5cfc;
+}
+
+.backBtn{
+    padding:10px 20px;
+    background:#7c5cfc;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.backBtn:hover{
+    background:#5e3dff;
+}
+
+.container{
+    width:90%;
+    margin:30px auto;
+}
+
+h1{
+    color:#7c5cfc;
+    margin-bottom:10px;
+}
+
+#candidate{
+    color:#4ecdc4;
+    font-size:20px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:#111118;
+    padding:25px;
+    border-radius:15px;
+    margin-bottom:25px;
+}
+
+.card h2{
+    color:#7c5cfc;
+    margin-bottom:20px;
+}
+
+ol{
+    padding-left:25px;
+}
+
+li{
+    margin-bottom:18px;
+    line-height:1.7;
+}
+
+.loading{
+    text-align:center;
+    color:#bbb;
+    font-size:18px;
+    margin-top:80px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <div class="logo">
+        CareerPilot AI
+    </div>
+
+    <button class="backBtn" onclick="history.back()">
+        ⬅ Back
+    </button>
+
+</div>
+
+<div class="container">
+
+<h1>🤖 AI Interview Questions</h1>
+
+<p id="candidate"></p>
+
+<div id="loading" class="loading">
+Loading Interview Questions...
+</div>
+
+<div id="content" style="display:none;">
+
+<div class="card">
+
+<h2>💻 Technical Questions</h2>
+
+<ol id="technicalList"></ol>
+
+</div>
+
+<div class="card">
+
+<h2>🚀 Project Questions</h2>
+
+<ol id="projectList"></ol>
+
+</div>
+
+<div class="card">
+
+<h2>👨‍💼 HR Questions</h2>
+
+<ol id="hrList"></ol>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function load(id,list){
+
+    let html="";
+
+    if(!list || list.length===0){
+
+        html="<li>No Questions Found</li>";
+
+    }
+
+    else{
+
+        list.forEach(question=>{
+
+            html+=`<li>${question}</li>`;
+
+        });
+
+    }
+
+    document.getElementById(id).innerHTML=html;
+
+}
+
+async function loadInterviewQuestions(){
+
+    try{
+
+        const response=await fetch(
+
+            "http://127.0.0.1:5000/latest-interview",
+
+            {
+
+                method:"GET",
+
+                credentials:"include"
+
+            }
+
+        );
+
+        const result=await response.json();
+
+        if(!result.success){
+
+            alert(result.message);
+
+            window.location="dashboard.html";
+
+            return;
+
+        }
+
+        document.getElementById("candidate").innerHTML=
+        "<b>Candidate :</b> "+result.name;
+
+        load("technicalList",result.interview_questions.technical);
+
+        load("projectList",result.interview_questions.project);
+
+        load("hrList",result.interview_questions.hr);
+
+        document.getElementById("loading").style.display="none";
+
+        document.getElementById("content").style.display="block";
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert("Unable to load interview questions.");
+
+    }
+
+}
+
+loadInterviewQuestions();
+
+</script>
+
+</body>
+</html>

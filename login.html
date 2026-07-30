@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - Login</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    background:#0a0a0f;
+    font-family:Arial, sans-serif;
+
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    margin:0;
+
+}
+
+
+.box{
+
+    width:380px;
+
+    background:#111118;
+
+    padding:35px;
+
+    border-radius:15px;
+
+    box-shadow:0 0 20px rgba(124,92,252,0.2);
+
+}
+
+
+
+.logo{
+
+    text-align:center;
+
+    font-size:30px;
+
+    font-weight:bold;
+
+    color:#7c5cfc;
+
+    margin-bottom:10px;
+
+}
+
+
+
+h2{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+}
+
+
+
+input{
+
+    width:100%;
+
+    padding:13px;
+
+    margin:10px 0;
+
+    background:#1a1a24;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:8px;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+
+
+input:focus{
+
+    border:1px solid #7c5cfc;
+
+}
+
+
+
+button{
+
+    width:100%;
+
+    padding:13px;
+
+    margin-top:15px;
+
+    background:#7c5cfc;
+
+    border:none;
+
+    border-radius:8px;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+
+
+button:hover{
+
+    background:#6847f2;
+
+}
+
+
+
+button:disabled{
+
+    opacity:0.6;
+
+    cursor:not-allowed;
+
+}
+
+
+
+.error{
+
+    color:#ff7675;
+
+    text-align:center;
+
+    margin-top:15px;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<div class="logo">
+    CareerPilot AI
+</div>
+
+
+<h2>
+    Login
+</h2>
+
+
+
+<input
+
+type="email"
+
+id="email"
+
+placeholder="Enter Email"
+
+
+
+
+>
+
+
+<input
+
+type="password"
+
+id="password"
+
+placeholder="Enter Password"
+
+
+
+
+>
+
+
+
+<button id="loginBtn" onclick="login()">
+
+Login
+
+</button>
+<div style="text-align:center;margin-top:20px;">
+
+<p style="color:#cccccc;">
+
+Don't have an account?
+
+<a href="register.html"
+style="color:#7c5cfc;text-decoration:none;font-weight:bold;">
+
+Register
+
+</a>
+
+</p>
+
+</div>
+<div style="text-align:right; margin-top:10px;">
+
+<a href="forgotpassword.html"
+style="color:#7c5cfc; text-decoration:none; font-size:14px;">
+
+Forgot Password?
+
+</a>
+
+</div>
+
+
+<p class="error" id="error"></p>
+
+
+</div>
+
+
+
+<script>
+
+
+// Press Enter to Login
+
+document.addEventListener(
+"keydown",
+function(event){
+
+    if(event.key==="Enter"){
+
+        login();
+
+    }
+
+});
+
+
+
+
+
+async function login(){
+
+
+const email =
+document.getElementById("email").value.trim();
+
+
+
+const password =
+document.getElementById("password").value;
+
+
+
+const btn =
+document.getElementById("loginBtn");
+
+
+
+const error =
+document.getElementById("error");
+
+
+
+error.innerHTML="";
+
+
+
+if(email==="" || password===""){
+
+
+error.innerHTML =
+"Please enter email and password.";
+
+return;
+
+
+}
+
+
+
+btn.disabled=true;
+
+btn.innerHTML="Logging in...";
+
+
+
+try{
+
+
+const response = await fetch(
+
+"http://127.0.0.1:5000/login",
+
+{
+
+
+method:"POST",
+
+
+credentials:"include",
+
+
+headers:{
+
+
+"Content-Type":"application/json"
+
+
+},
+
+
+body:JSON.stringify({
+
+email:email,
+
+password:password
+
+})
+
+
+}
+
+);
+
+
+
+const result =
+await response.json();
+
+
+
+console.log(result);
+
+
+
+if(result.success){
+
+
+
+localStorage.setItem(
+
+"loggedUser",
+
+result.name
+
+);
+
+
+
+alert("Login Successful");
+
+
+
+window.location.href =
+"dashboard.html";
+
+
+
+}
+
+else{
+
+
+error.innerHTML =
+result.message || "Invalid login details";
+
+
+}
+
+
+
+}
+
+
+
+catch(error){
+
+
+console.log(error);
+
+
+error.innerHTML =
+"Server not connected. Start Flask server.";
+
+
+
+}
+
+
+
+finally{
+
+
+btn.disabled=false;
+
+btn.innerHTML="Login";
+
+
+}
+
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - AI Job Match</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0a0a0f;
+color:white;
+}
+
+.navbar{
+height:70px;
+background:#111118;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 35px;
+box-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#7c5cfc;
+}
+
+.backBtn{
+padding:10px 20px;
+background:#7c5cfc;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.backBtn:hover{
+background:#5e3dff;
+}
+
+.container{
+width:90%;
+margin:auto;
+padding:40px 0;
+}
+
+h1{
+margin-bottom:15px;
+}
+
+p{
+color:#cccccc;
+margin-bottom:20px;
+}
+
+textarea{
+
+width:100%;
+height:250px;
+background:#111118;
+border:1px solid #333;
+border-radius:12px;
+padding:18px;
+color:white;
+font-size:15px;
+resize:none;
+
+}
+
+textarea:focus{
+outline:none;
+border-color:#7c5cfc;
+}
+
+#analyzeBtn{
+
+margin-top:20px;
+padding:12px 30px;
+border:none;
+background:#7c5cfc;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+
+}
+
+#analyzeBtn:hover{
+background:#5e3dff;
+}
+
+#loading{
+
+margin-top:20px;
+color:#4ecdc4;
+font-size:18px;
+
+}
+
+.card{
+
+background:#111118;
+padding:25px;
+border-radius:15px;
+margin-top:25px;
+
+}
+
+.card h2{
+
+color:#7c5cfc;
+margin-bottom:15px;
+
+}
+
+.progress{
+
+width:100%;
+height:18px;
+background:#222;
+border-radius:20px;
+overflow:hidden;
+margin:20px 0;
+
+}
+
+.progress-bar{
+
+height:100%;
+width:0%;
+background:#4ecdc4;
+transition:1s;
+
+}
+
+.score{
+
+font-size:40px;
+font-weight:bold;
+color:#4ecdc4;
+
+}
+
+ul{
+
+padding-left:20px;
+
+}
+
+li{
+
+margin-bottom:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+CareerPilot AI
+</div>
+
+<button class="backBtn"
+onclick="window.location='dashboard.html'">
+
+⬅ Back
+
+</button>
+
+</div>
+
+<div class="container">
+
+<h1>🎯 AI Job Match</h1>
+
+<p>
+
+Paste any Job Description.
+Your latest uploaded resume will automatically be compared using AI.
+
+</p>
+
+<textarea
+id="jobDescription"
+placeholder="Paste Job Description Here..."></textarea>
+
+<br>
+
+<button
+id="analyzeBtn"
+onclick="analyzeJob()">
+
+🚀 Analyze Match
+
+</button>
+
+<p id="loading"></p>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+    async function analyzeJob(){
+
+    const jd = document.getElementById("jobDescription").value.trim();
+
+    if(jd==""){
+
+        alert("Please paste Job Description.");
+
+        return;
+
+    }
+
+    document.getElementById("loading").innerHTML =
+    "🤖 AI is analyzing your resume...";
+
+    document.getElementById("result").innerHTML="";
+
+    try{
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/job-match",
+            {
+
+                method:"POST",
+
+                credentials:"include",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    job_description:jd
+
+                })
+
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Response:", data);
+        console.log(data);
+
+        document.getElementById("loading").innerHTML="";
+
+        if(!data.success){
+
+            alert(data.message);
+
+            return;
+
+        }
+
+        displayResult(data.result);
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        document.getElementById("loading").innerHTML="";
+
+        alert("Error");
+
+    }
+
+}
+function displayResult(result){
+
+    if(typeof result === "string"){
+        result = JSON.parse(result);
+    }
+
+    let html = "";
+
+    // Match %
+    html += `
+    <div class="card">
+        <h2>📊 Match Percentage</h2>
+
+        <div class="score">
+            ${result.match_percentage}%
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar"
+                 style="width:${result.match_percentage}%">
+            </div>
+        </div>
+    </div>
+    `;
+
+    // Matched Skills
+    html += `
+    <div class="card">
+        <h2>✅ Matched Skills</h2>
+        <ul>
+    `;
+
+    result.matched_skills.forEach(skill=>{
+        html += `<li>${skill}</li>`;
+    });
+
+    html += `
+        </ul>
+    </div>
+    `;
+
+    // Missing Skills
+    html += `
+    <div class="card">
+        <h2>❌ Missing Skills</h2>
+        <ul>
+    `;
+
+    result.missing_skills.forEach(skill=>{
+        html += `<li>${skill}</li>`;
+    });
+
+    html += `
+        </ul>
+    </div>
+    `;
+
+    // Suggestions
+    html += `
+    <div class="card">
+        <h2>💡 AI Suggestions</h2>
+        <ul>
+    `;
+
+    result.suggestions.forEach(item=>{
+        html += `<li>${item}</li>`;
+    });
+
+    html += `
+        </ul>
+    </div>
+    `;
+
+    document.getElementById("result").innerHTML = html;
+}
+
+</script>
+
+</body>
+
+</html>

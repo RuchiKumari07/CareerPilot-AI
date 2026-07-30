@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - Cover Letter Generator</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0a0a0f;
+color:white;
+}
+
+.navbar{
+height:70px;
+background:#111118;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 35px;
+box-shadow:0 0 10px rgba(0,0,0,.4);
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#7c5cfc;
+}
+
+.backBtn{
+padding:10px 20px;
+background:#7c5cfc;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+.backBtn:hover{
+background:#5e3dff;
+}
+
+.container{
+width:90%;
+margin:auto;
+padding:40px 0;
+}
+
+h1{
+margin-bottom:15px;
+}
+
+p{
+color:#ccc;
+margin-bottom:20px;
+}
+
+textarea{
+width:100%;
+height:250px;
+background:#111118;
+border:1px solid #333;
+border-radius:12px;
+padding:18px;
+color:white;
+font-size:15px;
+resize:none;
+}
+
+textarea:focus{
+outline:none;
+border-color:#7c5cfc;
+}
+
+#generateBtn{
+margin-top:20px;
+padding:12px 30px;
+background:#7c5cfc;
+border:none;
+color:white;
+border-radius:8px;
+cursor:pointer;
+font-size:16px;
+}
+
+#generateBtn:hover{
+background:#5e3dff;
+}
+
+#loading{
+margin-top:20px;
+font-size:18px;
+color:#4ecdc4;
+}
+
+.card{
+background:#111118;
+padding:25px;
+border-radius:15px;
+margin-top:25px;
+line-height:1.8;
+white-space:pre-wrap;
+}
+
+.actionBtns{
+margin-top:20px;
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.actionBtns button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#7c5cfc;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+CareerPilot AI
+</div>
+
+<button class="backBtn"
+onclick="window.location='dashboard.html'">
+
+⬅ Back
+
+</button>
+
+</div>
+
+<div class="container">
+
+<h1>✉ AI Cover Letter Generator</h1>
+
+<p>
+
+Paste the Job Description below.
+AI will generate a personalized cover letter using your latest uploaded resume.
+
+</p>
+
+<textarea
+id="jobDescription"
+placeholder="Paste Job Description Here..."></textarea>
+
+<br>
+
+<button
+id="generateBtn"
+onclick="generateLetter()">
+
+Generate Cover Letter
+
+</button>
+
+<p id="loading"></p>
+
+<div id="result"></div>
+
+</div>
+<script>
+
+async function generateLetter(){
+
+const jd=document.getElementById("jobDescription").value.trim();
+
+if(jd==""){
+
+alert("Please paste Job Description.");
+
+return;
+
+}
+
+document.getElementById("loading").innerHTML=
+"🤖 AI is writing your cover letter...";
+
+document.getElementById("result").innerHTML="";
+
+try{
+
+const response=await fetch(
+"http://127.0.0.1:5000/cover-letter",
+{
+
+method:"POST",
+
+credentials:"include",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+job_description:jd
+
+})
+
+}
+
+);
+
+const data=await response.json();
+
+document.getElementById("loading").innerHTML="";
+
+if(!data.success){
+
+alert(data.message);
+
+return;
+
+}
+
+document.getElementById("result").innerHTML=`
+
+<div class="card" id="coverText">
+
+${data.cover_letter.replace(/\n/g,"<br>")}
+
+<div class="actionBtns">
+
+<button onclick="copyLetter()">
+📋 Copy
+</button>
+
+<button onclick="window.print()">
+🖨 Print
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+catch(error){
+
+console.log(error);
+
+document.getElementById("loading").innerHTML="";
+
+alert("Server Error");
+
+}
+
+}
+
+function copyLetter(){
+
+const text=document.getElementById("coverText").innerText;
+
+navigator.clipboard.writeText(text);
+
+alert("Cover Letter Copied.");
+
+}
+
+</script>
+
+</body>
+
+</html>

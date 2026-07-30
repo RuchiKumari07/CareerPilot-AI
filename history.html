@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - Resume History</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#0a0a0f;
+color:white;
+}
+
+.navbar{
+height:70px;
+background:#111118;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 40px;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#7c5cfc;
+}
+
+.backBtn{
+padding:10px 20px;
+background:#7c5cfc;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.container{
+width:95%;
+margin:40px auto;
+}
+
+h1{
+margin-bottom:25px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#111118;
+border-radius:12px;
+overflow:hidden;
+}
+
+th{
+background:#7c5cfc;
+padding:15px;
+}
+
+td{
+padding:15px;
+text-align:center;
+border-bottom:1px solid #222;
+}
+
+.viewBtn{
+
+background:#28a745;
+color:white;
+border:none;
+padding:8px 18px;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.deleteBtn{
+
+background:#dc3545;
+color:white;
+border:none;
+padding:8px 18px;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.viewBtn:hover{
+background:#23913c;
+}
+
+.deleteBtn:hover{
+background:#c82333;
+}
+
+.empty{
+text-align:center;
+margin-top:50px;
+font-size:22px;
+color:#aaa;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+<div class="logo">
+CareerPilot AI
+</div>
+
+<button class="backBtn"
+onclick="window.location='dashboard.html'">
+
+Dashboard
+
+</button>
+
+</div>
+
+<div class="container">
+
+<h1>Your Resume History</h1>
+
+<table id="historyTable">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Resume</th>
+
+<th>Name</th>
+
+<th>ATS Score</th>
+
+<th>Date</th>
+
+<th>View</th>
+
+<th>Delete</th>
+
+</tr>
+
+</thead>
+
+<tbody id="historyBody">
+
+</tbody>
+
+</table>
+
+<div
+class="empty"
+id="empty"
+style="display:none;">
+
+No Resume Uploaded Yet
+
+</div>
+
+</div>
+
+<script>
+
+loadHistory();
+
+async function loadHistory(){
+
+const response=await fetch(
+"http://127.0.0.1:5000/resume-history",
+{
+credentials:"include"
+}
+);
+
+const result=await response.json();
+
+const body=document.getElementById("historyBody");
+
+body.innerHTML="";
+
+if(!result.success){
+
+alert(result.message);
+
+window.location="login.html";
+
+return;
+
+}
+
+if(result.resumes.length==0){
+
+document.getElementById("historyTable").style.display="none";
+
+document.getElementById("empty").style.display="block";
+
+return;
+
+}
+
+result.resumes.forEach(resume=>{
+
+body.innerHTML+=`
+
+<tr>
+
+<td>${resume.id}</td>
+
+<td>${resume.file_name}</td>
+
+<td>${resume.name}</td>
+
+<td>${resume.score}</td>
+
+<td>${resume.uploaded_at}</td>
+
+<td>
+
+<button
+class="viewBtn"
+onclick="viewResume(${resume.id})">
+
+View
+
+</button>
+
+</td>
+
+<td>
+
+<button
+class="deleteBtn"
+onclick="deleteResume(${resume.id})">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+async function viewResume(id){
+
+const response = await fetch(
+    "http://127.0.0.1:5000/resume/" + id,
+    {
+        credentials:"include"
+    }
+);
+
+const result = await response.json();
+
+if(!result.success){
+    alert(result.message);
+    return;
+}
+
+localStorage.setItem(
+    "selectedResume",
+    JSON.stringify(result.resume)
+);
+
+window.location.href="view-resume.html";
+
+}
+
+async function deleteResume(id){
+
+const ok = confirm("Are you sure you want to delete this resume?");
+
+if(!ok) return;
+
+const response = await fetch(
+    "http://127.0.0.1:5000/delete-resume/" + id,
+    {
+        method:"DELETE",
+        credentials:"include"
+    }
+);
+
+const result = await response.json();
+
+alert(result.message);
+
+if(result.success){
+
+    loadHistory();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

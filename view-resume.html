@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CareerPilot AI - View Resume</title>
+
+
+<style>
+
+body{
+    background:#0a0a0f;
+    color:white;
+    font-family:Arial, sans-serif;
+    margin:0;
+}
+
+
+.navbar{
+
+height:70px;
+background:#111118;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:0 35px;
+
+box-shadow:0 0 15px rgba(0,0,0,.4);
+
+}
+
+
+
+.logo{
+
+font-size:30px;
+font-weight:bold;
+color:#7c5cfc;
+
+}
+
+
+
+.container{
+
+width:90%;
+margin:30px auto;
+
+}
+
+
+
+.card{
+
+background:#111118;
+
+padding:25px;
+
+border-radius:15px;
+
+margin-bottom:20px;
+
+box-shadow:0 0 10px rgba(0,0,0,.3);
+
+}
+
+
+
+h1,h2{
+
+color:#7c5cfc;
+
+}
+
+
+
+button{
+
+padding:10px 20px;
+
+background:#7c5cfc;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-size:15px;
+
+}
+
+
+
+.printBtn{
+
+background:#00b894;
+
+}
+
+
+
+pre{
+
+white-space:pre-wrap;
+
+word-wrap:break-word;
+
+font-size:15px;
+
+}
+
+
+
+.eduCard{
+
+background:#1b1b28;
+
+padding:15px;
+
+border-left:5px solid #7c5cfc;
+
+margin-bottom:15px;
+
+border-radius:8px;
+
+}
+
+
+
+.expCard{
+
+background:#1b1b28;
+
+padding:20px;
+
+border-left:5px solid #00b894;
+
+border-radius:10px;
+
+margin-bottom:20px;
+
+}
+
+
+
+.expCard h3{
+
+color:#00e5a8;
+
+}
+
+
+
+li{
+
+margin-bottom:8px;
+
+}
+
+
+
+a{
+
+color:#00e5a8;
+
+text-decoration:none;
+
+}
+
+
+
+a:hover{
+
+text-decoration:underline;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="navbar">
+
+
+<div class="logo">
+CareerPilot AI
+</div>
+
+
+
+<button onclick="window.print()" class="printBtn">
+
+🖨 Print
+
+</button>
+
+
+</div>
+
+
+
+
+
+<div class="container">
+
+
+<button onclick="history.back()">
+
+⬅ Back
+
+</button>
+
+
+
+<div class="card">
+
+
+<h1 id="name">
+Loading...
+</h1>
+
+
+<p><b>Email:</b> <span id="email"></span></p>
+
+<p><b>Phone:</b> <span id="phone"></span></p>
+
+<p><b>Score:</b> <span id="score"></span></p>
+
+<p><b>Uploaded:</b> <span id="date"></span></p>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>Skills</h2>
+
+<p id="skills"></p>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>Education</h2>
+
+<div id="education"></div>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>Experience</h2>
+
+<div id="experience"></div>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>Projects</h2>
+
+<pre id="projects"></pre>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>AI Summary</h2>
+
+<pre id="summary"></pre>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>ATS Score</h2>
+
+<h3 id="ats"></h3>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>LinkedIn</h2>
+
+<a id="linkedin" target="_blank"></a>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h2>GitHub</h2>
+
+<a id="github" target="_blank"></a>
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<script>
+
+
+const resume = JSON.parse(
+localStorage.getItem("selectedResume")
+);
+
+
+
+if(!resume){
+
+
+alert("No Resume Found");
+
+
+window.location.href="history.html";
+
+
+}
+
+
+
+
+
+
+document.getElementById("name").innerText =
+resume.name || "Not Available";
+
+
+
+document.getElementById("email").innerText =
+resume.email || "Not Available";
+
+
+
+document.getElementById("phone").innerText =
+resume.phone || "Not Available";
+
+
+
+document.getElementById("score").innerText =
+resume.score || "Not Available";
+
+
+
+document.getElementById("date").innerText =
+resume.uploaded_at || "Not Available";
+
+
+
+
+
+document.getElementById("skills").innerText =
+
+resume.skills ?
+
+resume.skills.split(",").join(" | ")
+
+:
+
+"No Skills Found";
+
+
+
+
+
+
+
+
+
+// EDUCATION
+
+
+let educationHTML="";
+
+
+try{
+
+
+let education =
+JSON.parse(resume.education || "[]");
+
+
+
+education.forEach(item=>{
+
+
+educationHTML += `
+
+
+<div class="eduCard">
+
+🎓 ${item}
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+catch(e){
+
+
+educationHTML =
+"No Education Data";
+
+
+}
+
+
+
+document.getElementById("education").innerHTML =
+educationHTML;
+
+
+
+
+
+
+
+
+
+// EXPERIENCE
+
+
+let experienceHTML="";
+
+
+try{
+
+
+let experience =
+JSON.parse(resume.experience || "[]");
+
+
+
+experience.forEach(exp=>{
+
+
+experienceHTML += `
+
+
+<div class="expCard">
+
+
+<h3>${exp.title || "Experience"}</h3>
+
+
+<ul>
+
+
+${
+(exp.description || [])
+.map(line=>`<li>${line}</li>`)
+.join("")
+}
+
+
+</ul>
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+}
+
+catch(e){
+
+
+experienceHTML =
+"No Experience Data";
+
+
+}
+
+
+
+document.getElementById("experience").innerHTML =
+experienceHTML;
+
+
+
+
+
+
+
+
+
+// NEW AI FEATURES
+
+
+document.getElementById("projects").innerText =
+
+resume.projects ||
+
+"No Projects Found";
+
+
+
+
+
+document.getElementById("summary").innerText =
+
+resume.ai_summary ||
+
+"No AI Summary Generated";
+
+
+
+
+
+document.getElementById("ats").innerText =
+
+resume.ats ||
+
+"ATS Score Not Available";
+
+
+
+
+
+
+
+// LINKEDIN
+
+
+if(resume.linkedin){
+
+
+let link =
+document.getElementById("linkedin");
+
+
+link.innerText =
+resume.linkedin;
+
+
+link.href =
+resume.linkedin;
+
+
+}
+
+else{
+
+
+document.getElementById("linkedin").innerText =
+"No LinkedIn Found";
+
+
+}
+
+
+
+
+
+
+
+// GITHUB
+
+
+if(resume.github){
+
+
+let link =
+document.getElementById("github");
+
+
+link.innerText =
+resume.github;
+
+
+link.href =
+resume.github;
+
+
+}
+
+else{
+
+
+document.getElementById("github").innerText =
+"No GitHub Found";
+
+
+}
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

@@ -233,18 +233,23 @@ http://127.0.0.1:5000
 
 # 📷 Screenshots
 
-Add screenshots here:
+<img width="513" height="498" alt="image" src="https://github.com/user-attachments/assets/0e645581-867f-4580-aa67-9db59a843ae4" />
+<img width="1344" height="612" alt="image" src="https://github.com/user-attachments/assets/fec5408c-1303-4743-8216-ab4372c8fe77" />
+<img width="1344" height="594" alt="image" src="https://github.com/user-attachments/assets/1c039626-53ad-401a-aece-336893bdec0c" />
+<img width="620" height="615" alt="image" src="https://github.com/user-attachments/assets/72ee3f87-77fa-4697-bd05-47da29372b03" />
+<img width="1335" height="533" alt="image" src="https://github.com/user-attachments/assets/8a8c1688-8a87-475c-9a00-175d218c06cb" />
+<img width="1343" height="539" alt="image" src="https://github.com/user-attachments/assets/15206b37-eda4-4de7-8c6b-908805c33d61" />
+<img width="1348" height="269" alt="image" src="https://github.com/user-attachments/assets/1d6aebc0-12ea-4d15-ad23-8bdf73c9d0f6" />
+<img width="1324" height="625" alt="image" src="https://github.com/user-attachments/assets/25d6a81e-be50-4634-905c-752f0b6443c9" />
+<img width="1341" height="280" alt="image" src="https://github.com/user-attachments/assets/fc7ed900-3efb-406b-8fd1-91bb45ce8a01" />
 
-* Login Page
-* Dashboard
-* Resume Parser
-* Resume History
-* ATS Analysis
-* AI Resume Summary
-* Interview Questions
-* Job Match
-* ATS Improvement
-* Cover Letter Generator
+
+
+
+
+
+
+
 
 ---
 

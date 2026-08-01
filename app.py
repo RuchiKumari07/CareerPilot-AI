@@ -12,7 +12,7 @@ import tempfile
 import spacy
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import send_file
+from flask import send_file,  redirect
 import json
 import fitz
 from dotenv import load_dotenv
@@ -149,6 +149,13 @@ def login():
         "name": user["name"],
         "email": user["email"]
     })
+@app.route("/dashboard", methods=["GET"])
+def dashboard():
+
+    if "email" not in session:
+        return redirect("/login")
+
+    return send_file("index.html")
 @app.route("/send-otp", methods=["POST"])
 def send_otp():
 

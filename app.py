@@ -149,6 +149,7 @@ def login():
         "name": user["name"],
         "email": user["email"]
     })
+
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
 
@@ -199,7 +200,7 @@ def send_otp():
 
 Hello {user["name"]},
 
-Your OTP for password reset is:
+Your @app.route("/dashboard", methods=["GET"])OTP for password reset is:
 
 {otp}
 

@@ -36,7 +36,7 @@ app.config["SESSION_PERMANENT"] = True
 CORS(
     app,
     supports_credentials=True,
-    origins=["http://127.0.0.1:5500"]
+    origins=["https://careerpilot-ai-voux.onrender.com"]
 )
 
 

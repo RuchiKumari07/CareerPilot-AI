@@ -107,6 +107,9 @@ def register():
             "success":False,
             "error":str(e)
         })
+@app.route("/login", methods=["GET"])
+def login_page():
+    return send_file("login.html")
 @app.route("/login", methods=["POST"])
 def login():
 

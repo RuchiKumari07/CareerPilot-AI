@@ -763,7 +763,7 @@ def generate_ats_analysis(data):
 
 @app.route("/", methods=["GET"])
 def home():
-    return send_file("index.html")
+    return send_file("register.html")
 
 @app.route("/parse", methods=["POST"])
 def parse_resume():

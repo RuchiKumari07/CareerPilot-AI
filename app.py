@@ -12,6 +12,7 @@ import tempfile
 import spacy
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import send_file
 import json
 import fitz
 from dotenv import load_dotenv
@@ -762,10 +763,7 @@ def generate_ats_analysis(data):
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "status": "Resume Parser API Running",
-        "version": "2.0 NER Edition"
-    })
+    return send_file("index.html")
 
 @app.route("/parse", methods=["POST"])
 def parse_resume():

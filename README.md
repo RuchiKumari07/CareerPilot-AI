@@ -226,7 +226,7 @@ python app.py
 Open:
 
 ```
-"https://careerpilot-ai-voux.onrender.com"
+"https://careerpilot-ai-1-wdck.onrender.com"
 ```
 
 ---

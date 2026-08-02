@@ -200,7 +200,7 @@ def send_otp():
 
 Hello {user["name"]},
 
-Your @app.route("/dashboard", methods=["GET"])OTP for password reset is:
+Your OTP for password reset is:
 
 {otp}
 

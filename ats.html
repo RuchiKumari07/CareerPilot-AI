@@ -194,16 +194,18 @@ async function loadATS(){
 
     catch(error){
 
-        console.log(error);
+    console.log("REAL ERROR:", error);
 
-        document.getElementById("loading").innerHTML = "";
+    document.getElementById("loading").innerHTML = "";
 
-        document.getElementById("result").innerHTML =
-        `
-        <div class="card">
-            Server Error
-        </div>
-        `;
+    document.getElementById("result").innerHTML =
+    `
+    <div class="card">
+        ${error.message}
+    </div>
+    `;
+
+
 
     }
 

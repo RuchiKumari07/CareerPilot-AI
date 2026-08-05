@@ -1095,7 +1095,11 @@ def latest_interview():
 @app.route("/ats-improvement")
 def ats_improvement():
 
+    print("ATS ROUTE HIT")
+
     user_email = session.get("email")
+
+    print("EMAIL:", user_email)
 
     if not user_email:
         return jsonify({
@@ -1110,6 +1114,8 @@ def ats_improvement():
     )
 
     user = cursor.fetchone()
+
+    print("USER:", user)
 
 
     if not user:
@@ -1130,6 +1136,8 @@ def ats_improvement():
 
     resume = cursor.fetchone()
 
+    print("RESUME:", resume)
+
 
     if not resume:
         return jsonify({
@@ -1140,9 +1148,14 @@ def ats_improvement():
 
     try:
 
+        print("RAW TEXT LENGTH:", len(resume["raw_text"]))
+
         improvement = generate_ats_improvement(
             resume["raw_text"]
         )
+
+        print("AI RESPONSE:", improvement)
+
 
     except Exception as e:
 

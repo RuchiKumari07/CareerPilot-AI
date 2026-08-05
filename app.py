@@ -166,26 +166,36 @@ def parser():
     return send_file("index.html")
 @app.route("/history")
 def history():
+    if "email" not in session:
+        return redirect("/login")
     return send_file("history.html")
 
 
 @app.route("/interview")
 def interview():
+    if "email" not in session:
+        return redirect("/login")
     return send_file("interview.html")
 
 
 @app.route("/jobmatch")
 def jobmatch():
+    if "email" not in session:
+        return redirect("/login")
     return send_file("jobmatch.html")
 
 
 @app.route("/ats")
 def ats():
+    if "email" not in session:
+        return redirect("/login")
     return send_file("ats.html")
 
 
 @app.route("/coverletter")
 def coverletter():
+    if "email" not in session:
+        return redirect("/login")
     return send_file("coverletter.html")
 @app.route("/send-otp", methods=["POST"])
 def send_otp():

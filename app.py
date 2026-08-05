@@ -156,7 +156,7 @@ def dashboard():
     if "email" not in session:
         return redirect("/login")
 
-    return send_file("index.html")
+    return send_file("dashboard.html")
 @app.route("/send-otp", methods=["POST"])
 def send_otp():
 

@@ -1101,7 +1101,8 @@ def ats_improvement():
         return jsonify({
             "success": False,
             "message": "Please Login"
-        }), 401
+        }),401
+
 
     cursor.execute(
         "SELECT id FROM users WHERE email=%s",
@@ -1110,34 +1111,53 @@ def ats_improvement():
 
     user = cursor.fetchone()
 
+
+    if not user:
+        return jsonify({
+            "success":False,
+            "message":"User not found"
+        })
+
+
     cursor.execute("""
         SELECT raw_text,name
         FROM resumes
         WHERE user_id=%s
         ORDER BY id DESC
         LIMIT 1
-    """, (user["id"],))
+    """,(user["id"],))
+
 
     resume = cursor.fetchone()
 
+
     if not resume:
         return jsonify({
-            "success": False,
-            "message": "No Resume Found"
+            "success":False,
+            "message":"No Resume Found"
         })
 
-    improvement = generate_ats_improvement(
-        resume["raw_text"]
-    )
+
+    try:
+
+        improvement = generate_ats_improvement(
+            resume["raw_text"]
+        )
+
+    except Exception as e:
+
+        print("ATS ERROR:",e)
+
+        return jsonify({
+            "success":False,
+            "message":str(e)
+        })
+
 
     return jsonify({
-
-        "success": True,
-
-        "name": resume["name"],
-
-        "improvement": improvement
-
+        "success":True,
+        "name":resume["name"],
+        "improvement":improvement
     })
 @app.route("/delete-resume/<int:resume_id>", methods=["DELETE"])
 def delete_resume(resume_id):

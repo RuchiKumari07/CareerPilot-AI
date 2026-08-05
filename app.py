@@ -157,6 +157,13 @@ def dashboard():
         return redirect("/login")
 
     return send_file("dashboard.html")
+@app.route("/parser")
+def parser():
+
+    if "email" not in session:
+        return redirect("/login")
+
+    return send_file("index.html")
 @app.route("/send-otp", methods=["POST"])
 def send_otp():
 

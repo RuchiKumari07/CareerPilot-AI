@@ -164,6 +164,29 @@ def parser():
         return redirect("/login")
 
     return send_file("index.html")
+@app.route("/history")
+def history():
+    return send_file("history.html")
+
+
+@app.route("/interview")
+def interview():
+    return send_file("interview.html")
+
+
+@app.route("/jobmatch")
+def jobmatch():
+    return send_file("jobmatch.html")
+
+
+@app.route("/ats")
+def ats():
+    return send_file("ats.html")
+
+
+@app.route("/coverletter")
+def coverletter():
+    return send_file("coverletter.html")
 @app.route("/send-otp", methods=["POST"])
 def send_otp():
 

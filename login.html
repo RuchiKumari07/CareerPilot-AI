@@ -251,196 +251,87 @@ Forgot Password?
 
 
 
+
+
 <script>
+
+async function login() {
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const btn = document.getElementById("loginBtn");
+    const errorBox = document.getElementById("error");
+
+    errorBox.innerHTML = "";
+
+    if (email === "" || password === "") {
+        errorBox.innerHTML = "Please enter email and password.";
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = "Logging in...";
+
+    try {
+
+        const response = await fetch("http://127.0.0.1:5000/login", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        console.log("Response Status:", response.status);
+
+        const result = await response.json();
+
+        console.log("Response:", result);
+
+        if (response.ok && result.success) {
+
+            localStorage.setItem("loggedUser", result.name);
+
+            alert("Login Successful");
+
+            window.location.href = "http://127.0.0.1:5500/dashboard.html";
+
+        } else {
+
+            errorBox.innerHTML =
+                result.message || result.error || "Invalid login details.";
+
+        }
+
+    } catch (err) {
+
+        console.error("Fetch Error:", err);
+
+        errorBox.innerHTML =
+            "Server not connected. Make sure Flask is running.";
+
+    } finally {
+
+        btn.disabled = false;
+        btn.innerHTML = "Login";
+
+    }
+}
 
 
 // Press Enter to Login
+document.addEventListener("keydown", function(event) {
 
-document.addEventListener(
-"keydown",
-function(event){
-
-    if(event.key==="Enter"){
-
+    if (event.key === "Enter") {
         login();
-
     }
 
 });
 
-
-
-
-
-async function login(){
-
-
-const email =
-document.getElementById("email").value.trim();
-
-
-
-const password =
-document.getElementById("password").value;
-
-
-
-const btn =
-document.getElementById("loginBtn");
-
-
-
-const error =
-document.getElementById("error");
-
-
-
-error.innerHTML="";
-
-
-
-if(email==="" || password===""){
-
-
-error.innerHTML =
-"Please enter email and password.";
-
-return;
-
-
-}
-
-
-
-btn.disabled=true;
-
-btn.innerHTML="Logging in...";
-
-
-
-try{
-
-
-const response = await fetch(
-
-"https://careerpilot-ai-1-wdck.onrender.com/login",
-
-{
-
-
-method:"POST",
-
-
-credentials:"include",
-
-
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify({
-
-email:email,
-
-password:password
-
-})
-
-
-}
-
-);
-
-
-
-const result =
-await response.json();
-
-
-
-console.log(result);
-
-
-
-if(result.success){
-
-
-
-localStorage.setItem(
-
-"loggedUser",
-
-result.name
-
-);
-
-
-
-alert("Login Successful");
-
-
-
-window.location.href =
-"/dashboard";
-
-
-
-}
-
-else{
-
-
-error.innerHTML =
-result.message || "Invalid login details";
-
-
-}
-
-
-
-}
-
-
-
-catch(error){
-
-
-console.log(error);
-
-
-error.innerHTML =
-"Server not connected. Start Flask server.";
-
-
-
-}
-
-
-
-finally{
-
-
-btn.disabled=false;
-
-btn.innerHTML="Login";
-
-
-}
-
-
-
-}
-
-
-
 </script>
 
-
-</body>
-
-</html>

@@ -183,7 +183,7 @@ loadHistory();
 async function loadHistory(){
 
 const response=await fetch(
-    "https://careerpilot-ai-1-wdck.onrender.com/resume-history",
+    "http://127.0.0.1:5000/resume-history",
 {
 credentials:"include"
 }
@@ -266,7 +266,7 @@ Delete
 async function viewResume(id){
 
 const response = await fetch(
-    "https://careerpilot-ai-1-wdck.onrender.com/resume/" + id,
+    "http://127.0.0.1:5000/resume/" + id,
     {
         credentials:"include"
     }
@@ -295,7 +295,7 @@ const ok = confirm("Are you sure you want to delete this resume?");
 if(!ok) return;
 
 const response = await fetch(
-    "https://careerpilot-ai-1-wdck.onrender.com/delete-resume/" + id,
+    "http://127.0.0.1:5000/delete-resume/" + id,
     {
         method:"DELETE",
         credentials:"include"

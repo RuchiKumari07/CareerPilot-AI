@@ -226,7 +226,7 @@ python app.py
 Open:
 
 ```
-"https://careerpilot-ai-1-wdck.onrender.com"
+"http://127.0.0.1:5000"
 ```
 
 ---

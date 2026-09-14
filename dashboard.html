@@ -179,7 +179,7 @@ Upload your resume and get ATS Score,
 AI Summary and Resume Analysis.
 </p>
 
-<button onclick="window.location='/parser'">
+<button onclick="window.location='http://127.0.0.1:5000/parser'">
 Open Parser
 </button>
 
@@ -192,7 +192,7 @@ Open Parser
 View all your uploaded resumes along with ATS Score and upload date.
 </p>
 
-<button onclick="window.location='/history'">
+<button onclick="window.location='http://127.0.0.1:5000/history'">
 View History
 </button>
 </div>
@@ -204,7 +204,7 @@ View History
 <p>
 Generate interview questions from your resume.
 </p>
-<button onclick="window.location='/interview'">
+<button onclick="window.location='http://127.0.0.1:5000/interview'">
 Open Interview
 </button>
 
@@ -220,7 +220,7 @@ Open Interview
 Compare your resume with Job Description.
 </p>
 
-<button onclick="window.location='/jobmatch'">
+<button onclick="window.location='http://127.0.0.1:5000/jobmatch'">
 Open Job Match
 </button>
 
@@ -234,7 +234,7 @@ Open Job Match
 Get AI suggestions to improve your ATS score.
 </p>
 
-<button onclick="window.location='/ats'">
+<button onclick="window.location='http://127.0.0.1:5000/ats'">
 Open ATS
 </button>
 
@@ -248,7 +248,7 @@ Open ATS
 Generate an AI Cover Letter using your resume.
 </p>
 
-<button onclick="window.location='/coverletter'">
+<button onclick="window.location='http://127.0.0.1:5000/coverletter'">
 Open Cover Letter
 </button>
 
@@ -266,18 +266,23 @@ Built with ❤️ by Ruchi
 
 <script>
 
-const user = localStorage.getItem("loggedUser");
+fetch("http://127.0.0.1:5000/api/session", {
+    credentials: "include"
+})
+.then(response => response.json())
+.then(data => {
 
-if(user==null){
+    if (!data.logged_in) {
+        window.location.href = "http://127.0.0.1:5000/login";
+        return;
+    }
 
-alert("Please Login First");
-
-window.location.href="/login";
-
-}
-
-document.getElementById("welcome").textContent =
-"Welcome, " + user + " 👋";
+    document.getElementById("welcome").textContent =
+        "Welcome, " + data.name + " 👋";
+})
+.catch(error => {
+    console.error("Session Error:", error);
+});
 function goBack(){
 
 window.history.back();
@@ -288,7 +293,7 @@ async function logout(){
 
 try{
 
-await fetch("https://careerpilot-ai-1-wdck.onrender.com/logout",{
+await fetch("http://127.0.0.1:5000/logout",{
 
 method:"POST",
 
@@ -300,7 +305,7 @@ credentials:"include"
 
 localStorage.removeItem("loggedUser");
 
-window.location.href="/login";
+window.location.href="http://127.0.0.1:5000/login";
 
 }
 

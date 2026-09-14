@@ -21,6 +21,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+
+
+@app.after_request
+def add_no_cache(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
@@ -37,7 +45,7 @@ app.config["SESSION_PERMANENT"] = True
 CORS(
     app,
     supports_credentials=True,
-    origins=["https://careerpilot-ai-1-wdck.onrender.com"]
+    origins=["http://127.0.0.1:5500"]
 )
 
 
@@ -68,6 +76,19 @@ def test_db():
     data = cursor.fetchall()
 
     return jsonify(data)
+@app.route("/api/session")
+def check_session():
+
+    if "email" not in session:
+        return jsonify({
+            "logged_in": False
+        }), 401
+
+    return jsonify({
+        "logged_in": True,
+        "name": session.get("user"),
+        "email": session.get("email")
+    }), 200
 @app.route("/register", methods=["POST"])
 def register():
 
@@ -869,7 +890,7 @@ def parse_resume():
             "projects": extract_projects(text),
             "entities": extract_entities(text),
             
-            "raw_text": text[:2000],
+            "raw_text": text,
             "ai_summary": ai_summary
         }
         print("========== PARSED DATA ==========")
